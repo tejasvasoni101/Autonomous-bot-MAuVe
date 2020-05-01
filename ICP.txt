@@ -1,0 +1,78 @@
+import ICP
+import cv2
+import numpy as np
+
+#install pillow library and its compatiblator for pil
+
+i1 = "C:/Users/Tejasva/Desktop/icp/Untitled7a.jpg"
+i2 = "C:/Users/Tejasva/Desktop/icp/Untitled7b.jpg"
+
+A = cv2.imread(i1)
+B = cv2.imread(i2)
+
+
+icp = ICP.ICP(
+    binary_or_color="binary",
+    corners_or_edges="edges",
+    auto_select_model_and_data=1,
+    calculation_image_size=150,
+    max_num_of_pixels_used_for_icp=80,
+    pixel_correspondence_dist_threshold=20,
+    iterations=15,
+    model_image=i1,
+    data_image=i2,
+    font_file="/usr/share/fonts/truetype/freefont/FreeSerif.ttf",
+)
+
+icp.extract_pixels_from_color_image("model")
+icp.extract_pixels_from_color_image("data")
+x = icp.icp()
+R = x[0]
+T = x[1]
+
+angle = np.arcsin(R[0,1])
+print(R[0,1])
+print("angle=" , -angle*180/3.14)
+
+
+#cv2.imshow("Edge", B)
+print("T")
+
+
+M = cv2.getRotationMatrix2D((500/2,236/2),-angle*180/3.14,1)
+dst2 = cv2.warpAffine(A,M,(500,236))       #rotate
+
+
+
+M2 = np.float32([[1,0,T[0,0]],[0,1,T[1,0]]])
+#M2 = np.float32([[1,0,0],[0,1,0]])
+dst = cv2.warpAffine(B,M2,(500,236))       #translate
+
+
+
+
+
+"""
+cv2.imshow("A", A)
+
+cv2.imshow("dst2", dst)
+
+cv2.imshow("B", B)
+"""
+
+D = A + B
+cv2.imshow("D", D)    #original difference
+
+C = dst2 + dst
+cv2.imshow("C", C)      #after icp
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
+#dst2p = cv2.imwrite("C:/Users/Tejasva/Desktop/icp/inter.jpg",dst)
+#dstp = cv2.imwrite("C:/Users/Tejasva/Desktop/icp/inter2.jpg",dst2)
+
+
+icp.cleanup_directory()
