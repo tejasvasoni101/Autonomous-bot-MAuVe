@@ -34,12 +34,7 @@ ICP works only for small shifts in maps, thus reqireing high speed lidar data ex
 
 
 # Applications
+object avoidance in autonomous vehicles, closed room mapping for indoor bots etc
 
 
- 
-# Team Members
-
-
-
-# Mentors
 
