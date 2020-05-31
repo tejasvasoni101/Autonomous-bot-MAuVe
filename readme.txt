@@ -33,13 +33,4 @@ Poor quality data from Lidar
 ICP works only for small shifts in maps, thus reqireing high speed lidar data extraction and processing or limiting the speed of bot.
 
 
-# Applications
-
-
- 
-# Team Members
-
-
-
-# Mentors
 
