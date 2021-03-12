@@ -1,0 +1,150 @@
+
+#define pin1 20
+#define pin2 21
+#define M1 9
+#define M2 10
+#define pwm 8
+int a[90];
+int val, enc=0;
+int i=45;
+int val1;
+int x[2];
+//#include "TFMini.h"
+
+   #define serial1 Serial1   // Uno RX (TFMINI TX), Uno TX (TFMINI RX)s
+void tfmini()
+{
+  if(serial1.available()>=9)
+    {
+        if((0x59 == serial1.read()) && (0x59 == serial1.read())) //Byte1 & Byte2
+        {
+            unsigned int t1 = serial1.read(); //Byte3
+            unsigned int t2 = serial1.read(); //Byte4
+
+            t2 <<= 8;
+            t2 += t1;
+            x[0]= t2;
+            //Serial.println(x[0]);
+            //Serial.print('\t');
+
+            t1 = serial1.read(); //Byte5
+            t2 = serial1.read(); //Byte6
+
+            t2 <<= 8;
+            t2 += t1;
+            x[1] = t2;
+//            Serial.println(t2);
+
+            for(int i=0; i<3; i++) 
+            { 
+                serial1.read(); ////Byte7,8,9
+            }
+        }
+       //Serial.print(" ");
+    }
+//    Serial.flush();
+
+
+}
+//TFMini tfmini;
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(115200);
+  pinMode(M1, OUTPUT);
+  pinMode(M2, OUTPUT);
+  pinMode(pwm,OUTPUT);
+  pinMode(pin1, INPUT_PULLUP);
+  pinMode(pin2, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(pin1), check, CHANGE);
+  //Serial.println ("Initializing...");
+
+  // Step 2: Initialize the data rate for the SoftwareSerial port
+  
+
+  // Step 3: Initialize the TF Mini sensor
+  serial1.begin(115200);
+ // attachInterrupt(digitalPinToInterrupt(pin2), check1, RISING);
+
+}
+void check()
+{
+//  Serial.println("Hi");
+//  Serial.println(tfmini.getDistance());
+  if(digitalRead(pin2)==digitalRead(pin1))
+  {
+    val++;
+    }
+    else
+    val--;
+   
+   
+   
+   //Serial1.println(x);
+  }
+  
+// void check1()
+// {
+//  if(digitalRead(pin2)==HIGH)
+//  {
+//    val--;
+//  }
+//  else
+//  val++;
+// }
+
+void loop() {
+ // Serial.println(val);
+  if(enc==0)
+  {
+  digitalWrite(M1, LOW);
+  digitalWrite(M2, HIGH);
+  analogWrite(pwm, 100);
+  if(val>=100){
+    enc=1;
+  }
+  }
+ 
+  if(enc==1)
+  {
+    digitalWrite(M1, HIGH);
+    digitalWrite(M2, LOW);
+    analogWrite(pwm, 100);
+    if(val<=-100)
+    enc=0;
+  }
+   
+//  Serial.print("enc=");
+//  Serial.println(enc);
+//  Serial.println("1");
+//  Serial.println(tfmini.getDistance());
+//  Serial.println("2");
+if(val-val1==2 || val-val1==-2);
+{
+tfmini();
+//Serial.println("11");
+}
+             //Serial.print("X=");
+//Serial.println(x[0]);
+val1=val;
+            //Serial.print("enc=");
+//Serial.println(val);
+
+
+String s = String(val);
+
+String t = String(x[0]);
+
+String u = "," + t + "," + s + ",";
+
+//Serial.println(u);
+Serial.println(u);
+
+
+//int angle = (val*90)/350;
+//Serial.println(val);
+//Serial.println(angle);
+
+//Serial.println(x[0],val);
+
+}

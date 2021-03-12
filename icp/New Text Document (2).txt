@@ -1,0 +1,71 @@
+import serial
+import cv2
+import numpy as np
+arduino = serial.Serial('COM17', 115200, timeout=.1)
+j=0
+lidar = ""
+encoder = ""
+global e
+global l
+#array = np.zeros((1000,1000))
+#cv2.imwrite("C:/Users/Tejasva/Desktop/icp/mapp.jpg",array)
+
+arra=cv2.imread("C:/Users/Tejasva/Desktop/icp/mapp.jpg")
+array = cv2.cvtColor(arra, cv2.COLOR_BGR2GRAY)
+
+while j <= 10000:
+    dat = arduino.readline()[:-2] #the last bit gets rid of the new-line chars
+ #   dat = "b',50,6556,'"
+    i=2
+    lidar = ""
+    encoder = ""
+    if dat:
+
+        data = str(dat)
+        #print(data)
+
+        length = len(data)
+        #print(length)
+
+
+
+        if data[i] == "," and i <= length-1 :
+            i = i + 1
+            #print(i)
+
+            while data[i] != "," and i <= length-1 :
+                #print(i)
+                lidar = lidar + data[i]
+                i = i + 1
+            l = float(lidar)
+            print("lidar value==",l)
+
+
+
+        if data[i] == "," and i <= length-1 :
+            i = i + 1
+            #print(data[i])
+
+            while data[i] != "," and i <= length-1 :
+                #print(i)
+                encoder = encoder + data[i]
+                i = i + 1
+            e = float(encoder)
+            print("encoder value==",e)
+
+
+        q = (e*90*3.14)/63000
+        l = l
+        # 500 pixel to 1000 lidar range
+        if l <= 1000 and l >= 30:
+            cordw = int(abs((1000 /2 - int(l/2 * np.sin(q)))))
+            cordl = int(abs(l/2 * np.cos(q)))
+            print(q)
+            array[(cordw), (cordl)] = 255
+
+    j = j + 1
+
+cv2.imwrite("C:/Users/Tejasva/Desktop/icp/mappdisplay.jpg",array)
+cv2.imshow('capturing', array)
+cv2.waitKey()
+cv2.destroyAllWindows()

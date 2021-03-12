@@ -1,0 +1,135 @@
+#include <Adafruit_NeoPixel.h>
+
+#define PIN 6
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(60, PIN, NEO_GRB + NEO_KHZ800);
+double t=0;
+int n=20;
+
+// Use the onboard Uno LED
+int isObstaclePin = 3;  // This is our input pin
+int isObstacle = HIGH;  // HIGH MEANS NO OBSTACLE
+//int ledpin=13;
+int state=1;
+double revtime=0,starttime=0;
+long count=0;
+int dir_m=8;
+int pwm_m=9;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(isObstaclePin, INPUT);
+
+
+Serial.println("yo");
+ strip.begin();
+ for(int i=0;i<20;i++)
+ {
+  
+strip.setPixelColor(i, 0, 0,0); 
+ }
+ strip.show(); // Initialize all pixels to 'off'
+  pinMode(dir_m, OUTPUT);
+  pinMode(pwm_m, OUTPUT);
+  digitalWrite(dir_m, HIGH);
+  analogWrite(pwm_m, 60);
+}
+
+void loop() {
+
+isObstacle = digitalRead(isObstaclePin);
+  if (isObstacle == LOW)
+  {
+    //Serial.println("OBSTACLE!!, OBSTACLE!!");
+    //digitalWrite(LED, HIGH);
+    attachInterrupt(digitalPinToInterrupt(isObstaclePin),led,RISING);
+  }
+  else
+  {
+    //Serial.println("clear");
+    //digitalWrite(LED, LOW);
+  }
+if(count>1){
+  for(int i=0;i<n;i++)
+  {
+    for(int j=0;j<20;j++)
+    {
+      strip.setPixelColor(j, j, 255-j, 25); 
+    }
+  
+strip.show();
+delay(2*t/n);
+}
+}
+  
+//  delay(200);
+ 
+Serial.print(t);
+Serial.print("\t");
+Serial.println(count);
+
+//Serial.print("led started");
+
+
+}
+void led()
+{
+  count++;
+//  Serial.println("start");
+  
+  revtime =millis();
+  //Serial.println(revtime);
+   
+
+  t=double(-starttime+revtime);
+
+  //t = 1000;
+  starttime=revtime;
+  
+//  Serial.println(t);
+  //omega=6283.185/double(-starttime+revtime);
+//  Serial.println("w= ",omega);
+
+}
+/*
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 255, 25, 87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 0, 0,0);
+strip.setPixelColor(3, 255, 25,87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 0, 0,0);
+strip.setPixelColor(3, 255, 25,87);
+strip.setPixelColor(2, 255, 25,87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 0, 0,0);
+strip.setPixelColor(3, 255, 25,87);
+strip.setPixelColor(2, 0, 0,0);
+strip.setPixelColor(1, 255, 25,87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 0, 0,0);
+strip.setPixelColor(3, 255, 25,87);
+strip.setPixelColor(2, 255, 25,87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 0, 0,0);
+strip.setPixelColor(3, 255, 25,87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 0, 0,0); 
+strip.setPixelColor(4, 255, 25, 87); 
+strip.show();
+delay(t/n);
+strip.setPixelColor(5, 255, 25, 87);
+strip.show();
+ delay(t/n);
+*/
+//Serial.print("led round over"); 
