@@ -4,6 +4,9 @@
 # Abstract
 
 An oscillating lidar mount to extract raw 2-D maping of environment to be further used in SLAM and obstracle avoidance.
+It is a team project aimed at making a self-driving bot capable of following a defined path while avoiding obstacles.
+Created a Rotatory 2-D mapping device using a point LiDAR mounted on a arduino controlled Motor-encoder pair.
+Implemented ICP SLAM algorithm on the collective data from encoder and LiDAR to create a real-time global Map.
 
 # Hardware
 
